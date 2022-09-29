@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
-const Home: NextPage = () => {
+const Dashboard: NextPage = () => {
   return (
     <div>
       <Head>
@@ -11,10 +11,10 @@ const Home: NextPage = () => {
 
       <main>
         <h1>Quanto Gastei?</h1>
-        <h2>UnAuth</h2>
+        <h2>Authenticated</h2>
       </main>
     </div>
   );
 };
 
-export default Home;
+export default Dashboard;
