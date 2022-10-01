@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
 import AuthWrapper from '@/components/wrappers/auth-wrapper';
+import StyleWrapper from '@/components/wrappers/style-wrapper';
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
   <>
@@ -14,7 +15,9 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
       <link rel="icon" href="/fav.png" />
     </Head>
     <AuthWrapper>
-      <Component {...pageProps} />
+      <StyleWrapper>
+        <Component {...pageProps} />
+      </StyleWrapper>
     </AuthWrapper>
   </>
 );
