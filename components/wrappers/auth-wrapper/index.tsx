@@ -73,7 +73,13 @@ const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   if (router.pathname === Routes.Home) {
     if (loading) return <h1>Loading</h1>;
 
-    return <h1>Autenticado</h1>;
+    return (
+      <>
+        {children}
+
+        <h1>Autenticado</h1>
+      </>
+    );
   } else {
     return <>{children}</>;
   }

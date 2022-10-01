@@ -1,17 +1,13 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
+
+import { Typography } from '@mui/material';
 
 const Dashboard: NextPage = () => {
   return (
     <div>
-      <Head>
-        <title>Quanto Gastei?</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main>
-        <h1>Quanto Gastei?</h1>
-        <h2>Authenticated</h2>
+        <Typography variant="h1">Quanto Gastei?</Typography>
+        <Typography variant="h2">Authenticated</Typography>
       </main>
     </div>
   );
