@@ -1,17 +1,24 @@
-import { UiStoreModel } from '@/store/ui/ui.model';
+import UiStore from '@/store/ui/ui.model';
 import getTheme from '@/styles/theme';
 
 import create from 'zustand';
 
-const useUiStore = create<UiStoreModel>((set) => ({
-  theme: getTheme('dark'),
+const useUiStore = create<UiStore.Model>((set) => ({
+  themeMode: UiStore.ThemeMode.Dark,
+  theme: getTheme(UiStore.ThemeMode.Dark),
 
   switchThemeMode: (): void =>
-    set((previous) => ({
-      theme: getTheme(
-        previous.theme.palette.mode === 'light' ? 'dark' : 'light'
-      ),
-    })),
+    set((previous) => {
+      const themeMode =
+        previous.themeMode === UiStore.ThemeMode.Light
+          ? UiStore.ThemeMode.Dark
+          : UiStore.ThemeMode.Light;
+
+      return {
+        theme: getTheme(themeMode),
+        themeMode,
+      };
+    }),
 }));
 
 export default useUiStore;

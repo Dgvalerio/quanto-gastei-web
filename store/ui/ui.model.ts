@@ -1,7 +1,17 @@
 import { Theme } from '@mui/material';
 
-export interface UiStoreModel {
-  theme: Theme;
+namespace UiStore {
+  export enum ThemeMode {
+    Light = 'light',
+    Dark = 'dark',
+  }
 
-  switchThemeMode(): void;
+  export interface Model {
+    theme: Theme;
+    themeMode: ThemeMode;
+
+    switchThemeMode(): void;
+  }
 }
+
+export default UiStore;

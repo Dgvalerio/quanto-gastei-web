@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 
 import AuthWrapper from '@/components/wrappers/auth-wrapper';
+import Layout from '@/components/wrappers/layout';
 import StyleWrapper from '@/components/wrappers/style-wrapper';
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
@@ -16,7 +17,9 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
     </Head>
     <AuthWrapper>
       <StyleWrapper>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </StyleWrapper>
     </AuthWrapper>
   </>
