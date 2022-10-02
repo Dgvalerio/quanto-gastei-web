@@ -7,7 +7,7 @@ const Home: NextPage = () => {
     <div>
       <main>
         <Typography variant="h1">Quanto Gastei?</Typography>
-        <Typography variant="h2">UnAuth</Typography>
+        <Typography variant="h2">Home Page</Typography>
       </main>
     </div>
   );

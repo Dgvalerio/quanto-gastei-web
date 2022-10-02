@@ -7,7 +7,7 @@ const Dashboard: NextPage = () => {
     <div>
       <main>
         <Typography variant="h1">Quanto Gastei?</Typography>
-        <Typography variant="h2">Authenticated</Typography>
+        <Typography variant="h2">Dashboard</Typography>
       </main>
     </div>
   );

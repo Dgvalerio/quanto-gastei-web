@@ -15,13 +15,13 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
       <meta name="description" content="Assistente para controle de gastos" />
       <link rel="icon" href="/fav.png" />
     </Head>
-    <AuthWrapper>
-      <StyleWrapper>
+    <StyleWrapper>
+      <AuthWrapper>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </StyleWrapper>
-    </AuthWrapper>
+      </AuthWrapper>
+    </StyleWrapper>
   </>
 );
 

@@ -1,6 +1,9 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { useRouter } from 'next/router';
+
+import { Box, Button } from '@mui/material';
 
 import { firebaseAuth } from '@/config/firebase';
 import {
@@ -18,68 +21,41 @@ const provider = new GoogleAuthProvider();
 
 const loginWithGoogle = async (): Promise<void> => {
   try {
-    const result = await signInWithPopup(firebaseAuth, provider);
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential?.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-
-    // ...
-    console.log({ token, user });
+    await signInWithPopup(firebaseAuth, provider);
   } catch (error) {
-    // Handle Errors here.
-    const errorCode = (error as FirebaseError).code;
-    const errorMessage = (error as FirebaseError).message;
-    // The email of the user's account used.
-    const email = (error as FirebaseError).customData?.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(
-      error as FirebaseError
-    );
+    const { code, message } = error as FirebaseError;
 
-    console.log({
-      errorCode,
-      errorMessage,
-      email,
-      credential,
-    });
-    // ...
+    toast.error(`[${code}]: ${message}`);
   }
 };
 
 const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
   const router = useRouter();
+  const [authenticated, setAuthenticated] = useState(true);
   const [loading, setLoading] = useState(true);
+
+  const signIn = (): void => {
+    loginWithGoogle().finally(() => setLoading(false));
+  };
 
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        const uid = user.uid;
-
-        console.log(`yes: ${uid}`);
-
-        setLoading(false);
-      } else {
-        console.log('not');
-
-        loginWithGoogle().finally(() => setLoading(false));
-      }
+      setAuthenticated(!!user);
+      setLoading(false);
     });
   }, []);
 
-  if (router.pathname === Routes.Home) {
-    if (loading) return <h1>Loading</h1>;
+  if (loading) return <h1>Loading</h1>;
 
+  if (!authenticated)
     return (
-      <>
-        {children}
-
-        <h1>Autenticado</h1>
-      </>
+      <Box display="flex" justifyContent="center" alignItems="center" flex={1}>
+        <Button onClick={signIn}>Logar com o Google</Button>
+      </Box>
     );
+
+  if (router.pathname === Routes.Home) {
+    return <>{children}</>;
   } else {
     return <>{children}</>;
   }
