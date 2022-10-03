@@ -2,16 +2,16 @@ import type { NextPage } from 'next';
 
 import { Grid, Typography } from '@mui/material';
 
+import OperationTypeCreateForm from '@/src/operation-type/components/create-form/operation-type.create-form';
+
 const Home: NextPage = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item>
-        <Typography variant="h1" align="center">
-          Quanto Gastei?
+        <Typography variant="h4" align="center">
+          Operation Type - Create Form
         </Typography>
-        <Typography variant="h2" align="center">
-          Home Page
-        </Typography>
+        <OperationTypeCreateForm />
       </Grid>
     </Grid>
   );

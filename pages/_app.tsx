@@ -1,3 +1,5 @@
+import { ToastContainer } from 'react-toastify';
+
 import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -5,6 +7,8 @@ import Head from 'next/head';
 import AuthWrapper from '@/components/wrappers/auth-wrapper';
 import Layout from '@/components/wrappers/layout';
 import StyleWrapper from '@/components/wrappers/style-wrapper';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
   <>
@@ -19,6 +23,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => (
       <AuthWrapper>
         <Layout>
           <Component {...pageProps} />
+          <ToastContainer />
         </Layout>
       </AuthWrapper>
     </StyleWrapper>
