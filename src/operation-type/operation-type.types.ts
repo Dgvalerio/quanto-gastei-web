@@ -34,6 +34,7 @@ namespace OperationTypeTypes {
     create(
       data: OperationTypeTypes.Create
     ): Promise<OperationTypeTypes.Model | undefined>;
+    readAll(): Promise<OperationTypeTypes.Model[]>;
   }
 
   export interface CreateForm extends HTMLFormElement {
@@ -42,6 +43,8 @@ namespace OperationTypeTypes {
   }
 
   export type CreateFormComponent = FC;
+  export type ReadAllComponent = FC;
+  export type ItemComponent = FC<Model>;
 }
 
 export default OperationTypeTypes;

@@ -2,13 +2,22 @@ import { toast } from 'react-toastify';
 
 import { firestore } from '@/config/firebase';
 import OperationTypeTypes from '@/src/operation-type/operation-type.types';
-import { addDoc, collection } from '@firebase/firestore';
+import {
+  addDoc,
+  collection,
+  CollectionReference,
+  getDocs,
+} from '@firebase/firestore';
 
 import { validate } from 'class-validator';
 
 export const OPERATION_TYPE_PATH = 'OperationType';
 
 class OperationTypeRepository implements OperationTypeTypes.Repository {
+  getCollection(): CollectionReference {
+    return collection(firestore, OPERATION_TYPE_PATH);
+  }
+
   async create(
     data: OperationTypeTypes.Create
   ): Promise<OperationTypeTypes.Model | undefined> {
@@ -33,14 +42,28 @@ class OperationTypeRepository implements OperationTypeTypes.Repository {
         return;
       }
 
-      const collectionReference = collection(firestore, OPERATION_TYPE_PATH);
-      const documentReference = await addDoc(collectionReference, data);
+      const documentReference = await addDoc(this.getCollection(), data);
 
       // todo: verificar se o nome já foi utilizado
 
       return { id: documentReference.id, ...data };
     } catch (e) {
       toast.error(`Falha ao criar um tipo de operação ${e}`);
+    }
+  }
+
+  async readAll(): Promise<OperationTypeTypes.Model[]> {
+    try {
+      const querySnapshot = await getDocs(this.getCollection());
+
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<OperationTypeTypes.Model, 'id'>),
+      }));
+    } catch (e) {
+      toast.error(`Falha ao listar todos os tipos de operação ${e}`);
+
+      return [];
     }
   }
 }
