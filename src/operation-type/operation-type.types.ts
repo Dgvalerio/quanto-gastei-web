@@ -1,5 +1,7 @@
 import { FC } from 'react';
 
+import { CollectionReference } from '@firebase/firestore';
+
 import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
 
 namespace OperationTypeTypes {
@@ -31,6 +33,7 @@ namespace OperationTypeTypes {
   }
 
   export interface Repository {
+    getCollection(): CollectionReference;
     create(
       data: OperationTypeTypes.Create
     ): Promise<OperationTypeTypes.Model | undefined>;

@@ -42,9 +42,16 @@ class OperationTypeRepository implements OperationTypeTypes.Repository {
         return;
       }
 
-      const documentReference = await addDoc(this.getCollection(), data);
+      const models = await this.readAll();
+      const conflict = models.find(({ name }) => name === validationDTO.name);
 
-      // todo: verificar se o nome já foi utilizado
+      if (conflict) {
+        toast.error(`Já existe um tipo de operação com esse nome!`);
+
+        return;
+      }
+
+      const documentReference = await addDoc(this.getCollection(), data);
 
       return { id: documentReference.id, ...data };
     } catch (e) {
