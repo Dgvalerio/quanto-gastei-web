@@ -44,6 +44,13 @@ namespace OperationTypeTypes {
     delete(path: string): Promise<boolean>;
   }
 
+  export interface Store {
+    loading: boolean;
+    operationTypes: OperationTypeTypes.Model[];
+    loadAll(): Promise<void>;
+    deleteItem(id: string): Promise<void>;
+  }
+
   export interface CreateForm extends HTMLFormElement {
     nameInput: HTMLInputElement;
     colorInput: HTMLInputElement;

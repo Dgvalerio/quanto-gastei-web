@@ -95,11 +95,11 @@ class OperationTypeRepository implements OperationTypeTypes.Repository {
 
       await deleteDoc(reference);
 
-      return false;
+      return true;
     } catch (e) {
       toast.error(`Falha ao criar um tipo de operação ${e}`);
 
-      return true;
+      return false;
     }
   }
 }

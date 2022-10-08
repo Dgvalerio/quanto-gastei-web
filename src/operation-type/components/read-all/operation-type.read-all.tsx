@@ -1,32 +1,40 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 
-import { Box, Grid, Paper } from '@mui/material';
+import { Box, Grid, Paper, Skeleton } from '@mui/material';
 
 import OperationTypeItem from '@/src/operation-type/components/read-one/operation-type.item';
-import OperationTypeRepository from '@/src/operation-type/operation-type.repository';
+import useOperationTypeStore from '@/src/operation-type/operation-type.store';
 import OperationTypeTypes from '@/src/operation-type/operation-type.types';
 
+const LoadingSkeleton: FC = () => (
+  <>
+    {[...new Array(6)].map((_, i) => (
+      <Grid key={i} item xs={4}>
+        <Skeleton width="100%" height={128} sx={{ transform: 'none' }} />
+      </Grid>
+    ))}
+  </>
+);
+
 const OperationTypeReadAll: OperationTypeTypes.ReadAllComponent = () => {
-  const [operationTypes, setOperationTypes] = useState<
-    OperationTypeTypes.Model[]
-  >([]);
+  const { operationTypes, loadAll, loading } = useOperationTypeStore();
 
   useEffect(() => {
-    const operationTypeRepository = new OperationTypeRepository();
-
-    operationTypeRepository
-      .readAll()
-      .then((result) => setOperationTypes(result));
-  }, []);
+    void loadAll();
+  }, [loadAll]);
 
   return (
     <Box component={Paper} p={2}>
-      <Grid container spacing={2} justifyContent="center">
-        {operationTypes.map((type) => (
-          <Grid item xs={4} key={type.id}>
-            <OperationTypeItem {...type} />
-          </Grid>
-        ))}
+      <Grid container spacing={2}>
+        {loading ? (
+          <LoadingSkeleton />
+        ) : (
+          operationTypes.map((type) => (
+            <Grid item xs={4} key={type.id}>
+              <OperationTypeItem {...type} />
+            </Grid>
+          ))
+        )}
       </Grid>
     </Box>
   );

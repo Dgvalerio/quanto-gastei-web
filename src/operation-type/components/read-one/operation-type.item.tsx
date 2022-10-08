@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { alpha } from '@mui/system';
 
-import OperationTypeRepository from '@/src/operation-type/operation-type.repository';
+import useOperationTypeStore from '@/src/operation-type/operation-type.store';
 import OperationTypeTypes from '@/src/operation-type/operation-type.types';
 
 const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
@@ -17,11 +17,7 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
   name,
   color,
 }) => {
-  const handleDelete = async (): Promise<void> => {
-    const operationTypeRepository = new OperationTypeRepository();
-
-    await operationTypeRepository.delete(id);
-  };
+  const { deleteItem } = useOperationTypeStore();
 
   return (
     <Card
@@ -45,7 +41,10 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
           </Typography>
         </Grid>
         <Grid item xs="auto">
-          <IconButton aria-label="delete operation type" onClick={handleDelete}>
+          <IconButton
+            aria-label="delete operation type"
+            onClick={deleteItem.bind(null, id)}
+          >
             <Delete fontSize="small" />
           </IconButton>
         </Grid>
