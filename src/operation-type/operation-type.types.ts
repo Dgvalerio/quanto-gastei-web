@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { CollectionReference } from '@firebase/firestore';
+import { CollectionReference, DocumentReference } from '@firebase/firestore';
 
 import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
 
@@ -34,10 +34,14 @@ namespace OperationTypeTypes {
 
   export interface Repository {
     getCollection(): CollectionReference;
+    getReference(path: string): DocumentReference;
     create(
       data: OperationTypeTypes.Create
     ): Promise<OperationTypeTypes.Model | undefined>;
     readAll(): Promise<OperationTypeTypes.Model[]>;
+    readOne(): Promise<OperationTypeTypes.Model>;
+    update(): Promise<OperationTypeTypes.Model>;
+    delete(path: string): Promise<boolean>;
   }
 
   export interface CreateForm extends HTMLFormElement {

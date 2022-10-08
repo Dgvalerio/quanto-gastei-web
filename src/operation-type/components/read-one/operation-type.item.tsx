@@ -1,6 +1,15 @@
-import { Card, CardContent, Typography } from '@mui/material';
+import { Delete } from '@mui/icons-material';
+import {
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { alpha } from '@mui/system';
 
+import OperationTypeRepository from '@/src/operation-type/operation-type.repository';
 import OperationTypeTypes from '@/src/operation-type/operation-type.types';
 
 const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
@@ -8,6 +17,12 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
   name,
   color,
 }) => {
+  const handleDelete = async (): Promise<void> => {
+    const operationTypeRepository = new OperationTypeRepository();
+
+    await operationTypeRepository.delete(id);
+  };
+
   return (
     <Card
       variant="outlined"
@@ -18,14 +33,31 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
         height: '100%',
       }}
     >
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          #{id}
-        </Typography>
-        <Typography variant="h5" component="div">
-          {name}
-        </Typography>
-      </CardContent>
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="baseline"
+        component={CardContent}
+      >
+        <Grid item xs="auto">
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+            #{id}
+          </Typography>
+        </Grid>
+        <Grid item xs="auto">
+          <IconButton aria-label="delete operation type" onClick={handleDelete}>
+            <Delete fontSize="small" />
+          </IconButton>
+        </Grid>
+        <Grid item xs={12} mb={2}>
+          <Divider />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h5" component="div">
+            {name}
+          </Typography>
+        </Grid>
+      </Grid>
     </Card>
   );
 };

@@ -6,6 +6,9 @@ import {
   addDoc,
   collection,
   CollectionReference,
+  deleteDoc,
+  doc,
+  DocumentReference,
   getDocs,
 } from '@firebase/firestore';
 
@@ -16,6 +19,10 @@ export const OPERATION_TYPE_PATH = 'OperationType';
 class OperationTypeRepository implements OperationTypeTypes.Repository {
   getCollection(): CollectionReference {
     return collection(firestore, OPERATION_TYPE_PATH);
+  }
+
+  getReference(path: string): DocumentReference {
+    return doc(firestore, OPERATION_TYPE_PATH, path);
   }
 
   async create(
@@ -71,6 +78,28 @@ class OperationTypeRepository implements OperationTypeTypes.Repository {
       toast.error(`Falha ao listar todos os tipos de operação ${e}`);
 
       return [];
+    }
+  }
+
+  async readOne(): Promise<OperationTypeTypes.Model> {
+    return Promise.resolve({} as OperationTypeTypes.Model);
+  }
+
+  async update(): Promise<OperationTypeTypes.Model> {
+    return Promise.resolve({} as OperationTypeTypes.Model);
+  }
+
+  async delete(path: string): Promise<boolean> {
+    try {
+      const reference = this.getReference(path);
+
+      await deleteDoc(reference);
+
+      return false;
+    } catch (e) {
+      toast.error(`Falha ao criar um tipo de operação ${e}`);
+
+      return true;
     }
   }
 }
