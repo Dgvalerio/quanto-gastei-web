@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { Box, Button } from '@mui/material';
 
+import Loading from '@/components/loading';
 import { firebaseAuth } from '@/config/firebase';
 import {
   GoogleAuthProvider,
@@ -45,7 +46,7 @@ const AuthWrapper: FC<{ children: ReactNode }> = ({ children }) => {
     });
   }, []);
 
-  if (loading) return <h1>Loading</h1>;
+  if (loading) return <Loading />;
 
   if (!authenticated)
     return (
