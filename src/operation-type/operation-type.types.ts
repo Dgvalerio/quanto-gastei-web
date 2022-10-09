@@ -47,6 +47,7 @@ namespace OperationTypeTypes {
   export interface Store {
     loading: boolean;
     operationTypes: OperationTypeTypes.Model[];
+    createItem(name: string, color: string): Promise<void>;
     loadAll(): Promise<void>;
     deleteItem(id: string): Promise<void>;
   }

@@ -3,36 +3,26 @@ import { toast } from 'react-toastify';
 
 import { Box, Button, Grid, Paper, TextField } from '@mui/material';
 
-import { firebaseAuth } from '@/config/firebase';
-import OperationTypeRepository from '@/src/operation-type/operation-type.repository';
+import useOperationTypeStore from '@/src/operation-type/operation-type.store';
 import OperationTypeTypes from '@/src/operation-type/operation-type.types';
 
 const OperationTypeCreateForm: OperationTypeTypes.CreateFormComponent = () => {
-  const handleSubmit = (
+  const { createItem } = useOperationTypeStore();
+
+  const handleSubmit = async (
     event: FormEvent<OperationTypeTypes.CreateForm>
-  ): void => {
+  ): Promise<void> => {
     event.preventDefault();
 
-    const {
-      nameInput: { value: name },
-      colorInput: { value: color },
-    } = event.currentTarget;
+    const { nameInput, colorInput } = event.currentTarget;
 
-    const owner = firebaseAuth.currentUser?.uid;
-
-    if (!name || !color || !owner) {
+    if (!nameInput.value || !colorInput.value) {
       toast.error('Preencha todos os campos!');
-
-      return;
+    } else {
+      await createItem(nameInput.value, colorInput.value);
+      nameInput.value = '';
+      colorInput.value = '#000000';
     }
-
-    const operationTypeRepository = new OperationTypeRepository();
-
-    operationTypeRepository
-      .create({ name, color, owner })
-      .then(
-        (ok) => ok && toast.success('Tipo de operação criada com sucesso!')
-      );
   };
 
   return (
@@ -61,6 +51,7 @@ const OperationTypeCreateForm: OperationTypeTypes.CreateFormComponent = () => {
             placeholder="Cor"
             type="color"
             variant="outlined"
+            defaultValue="#000000"
             required
             fullWidth
             InputLabelProps={{ shrink: true }}
