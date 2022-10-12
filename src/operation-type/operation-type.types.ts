@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { CollectionReference, DocumentReference } from '@firebase/firestore';
 
-import { IsHexColor, IsNotEmpty, IsString } from 'class-validator';
+import { IsHexColor, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 namespace OperationTypeTypes {
   export interface Model {
@@ -46,34 +46,33 @@ namespace OperationTypeTypes {
 
     @IsString()
     @IsNotEmpty()
+    @IsOptional()
     name?: Model['name'];
 
     @IsHexColor()
     @IsNotEmpty()
+    @IsOptional()
     color?: Model['color'];
 
     @IsString()
     @IsNotEmpty()
+    @IsOptional()
     owner?: Model['owner'];
   }
 
   export interface Repository {
     getCollection(): CollectionReference;
     getReference(path: string): DocumentReference;
-    create(
-      data: OperationTypeTypes.Create
-    ): Promise<OperationTypeTypes.Model | undefined>;
-    readAll(): Promise<OperationTypeTypes.Model[]>;
-    readOne(): Promise<OperationTypeTypes.Model | undefined>;
-    update(
-      data: OperationTypeTypes.Update
-    ): Promise<OperationTypeTypes.Model | undefined>;
+    create(data: Create): Promise<Model | undefined>;
+    readAll(): Promise<Model[]>;
+    readOne(): Promise<Model | undefined>;
+    update(data: Update): Promise<Model | undefined>;
     delete(path: string): Promise<boolean>;
   }
 
   export interface Store {
     loading: boolean;
-    operationTypes: OperationTypeTypes.Model[];
+    operationTypes: Model[];
     createItem(name: string, color: string): Promise<void>;
     updateItem(id: string, name: string, color: string): Promise<void>;
     loadAll(): Promise<void>;
