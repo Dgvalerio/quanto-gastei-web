@@ -1,10 +1,16 @@
-import { Delete } from '@mui/icons-material';
+import { FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { Delete, Edit, EditOff } from '@mui/icons-material';
 import {
+  Button,
   Card,
   CardContent,
+  Collapse,
   Divider,
   Grid,
   IconButton,
+  TextField,
   Typography,
 } from '@mui/material';
 import { alpha } from '@mui/system';
@@ -17,7 +23,26 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
   name,
   color,
 }) => {
-  const { deleteItem } = useOperationTypeStore();
+  const { deleteItem, updateItem } = useOperationTypeStore();
+  const [edit, setEdit] = useState<boolean>(false);
+  const [nameInput, setNameInput] = useState(name);
+  const [colorInput, setColorInput] = useState(color);
+
+  const toggleEdit = (): void => setEdit((prev) => !prev);
+
+  const handleSubmit = async (
+    event: FormEvent<OperationTypeTypes.CreateForm>
+  ): Promise<void> => {
+    event.preventDefault();
+
+    if (!nameInput || !colorInput) {
+      toast.error('Preencha todos os campos!');
+    } else {
+      await updateItem(id, nameInput, colorInput);
+      setNameInput('');
+      setColorInput('#000000');
+    }
+  };
 
   return (
     <Card
@@ -41,6 +66,9 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
           </Typography>
         </Grid>
         <Grid item xs="auto">
+          <IconButton aria-label="update operation type" onClick={toggleEdit}>
+            {edit ? <EditOff fontSize="small" /> : <Edit fontSize="small" />}
+          </IconButton>
           <IconButton
             aria-label="delete operation type"
             onClick={deleteItem.bind(null, id)}
@@ -51,10 +79,57 @@ const OperationTypeItem: OperationTypeTypes.ItemComponent = ({
         <Grid item xs={12} mb={2}>
           <Divider />
         </Grid>
+
         <Grid item xs={12}>
-          <Typography variant="h5" component="div">
-            {name}
-          </Typography>
+          <Collapse in={!edit}>
+            <Typography variant="h5" component="div">
+              {name}
+            </Typography>
+          </Collapse>
+          <Collapse in={edit}>
+            <Grid
+              container
+              spacing={2}
+              justifyContent="center"
+              component="form"
+              onSubmit={handleSubmit}
+            >
+              <Grid item xs={12}>
+                <TextField
+                  value={nameInput}
+                  onChange={({ currentTarget }): void =>
+                    setNameInput(currentTarget.value)
+                  }
+                  label="Nome"
+                  placeholder="Nome"
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  value={colorInput}
+                  onChange={({ currentTarget }): void =>
+                    setColorInput(currentTarget.value)
+                  }
+                  label="Cor"
+                  placeholder="Cor"
+                  type="color"
+                  variant="outlined"
+                  defaultValue="#000000"
+                  required
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} ml="auto">
+                <Button variant="outlined" type="submit" fullWidth>
+                  Atualizar
+                </Button>
+              </Grid>
+            </Grid>
+          </Collapse>
         </Grid>
       </Grid>
     </Card>

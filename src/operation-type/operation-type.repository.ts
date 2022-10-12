@@ -10,6 +10,7 @@ import {
   doc,
   DocumentReference,
   getDocs,
+  updateDoc,
 } from '@firebase/firestore';
 
 import { validate } from 'class-validator';
@@ -81,12 +82,50 @@ class OperationTypeRepository implements OperationTypeTypes.Repository {
     }
   }
 
-  async readOne(): Promise<OperationTypeTypes.Model> {
+  async readOne(): Promise<OperationTypeTypes.Model | undefined> {
     return Promise.resolve({} as OperationTypeTypes.Model);
   }
 
-  async update(): Promise<OperationTypeTypes.Model> {
-    return Promise.resolve({} as OperationTypeTypes.Model);
+  async update({
+    id,
+    ...data
+  }: OperationTypeTypes.Update): Promise<OperationTypeTypes.Model | undefined> {
+    try {
+      const validationDTO = new OperationTypeTypes.Update(id, data);
+
+      const errors = await validate(validationDTO);
+
+      if (errors && errors.length > 0) {
+        errors.map(
+          (error) =>
+            error.constraints &&
+            Object.entries(error.constraints).map(([, value]) =>
+              toast.error(`${error.property}: ${value}`)
+            )
+        );
+
+        return;
+      }
+
+      if (data.name) {
+        const models = await this.readAll();
+        const conflict = models.find(
+          (model) => model.id !== id && model.name === data.name
+        );
+
+        if (conflict) {
+          toast.error(`Já existe um tipo de operação com esse nome!`);
+
+          return;
+        }
+      }
+
+      await updateDoc(this.getReference(id), data);
+
+      return await this.readOne();
+    } catch (e) {
+      toast.error(`Falha ao atualizar um tipo de operação ${e}`);
+    }
   }
 
   async delete(path: string): Promise<boolean> {

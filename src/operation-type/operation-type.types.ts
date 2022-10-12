@@ -21,15 +21,40 @@ namespace OperationTypeTypes {
 
     @IsString()
     @IsNotEmpty()
-    name: string;
+    name: Model['name'];
 
     @IsHexColor()
     @IsNotEmpty()
-    color: string;
+    color: Model['color'];
 
     @IsString()
     @IsNotEmpty()
-    owner: string;
+    owner: Model['owner'];
+  }
+
+  export class Update implements Partial<Model> {
+    constructor(id: Model['id'], data: Partial<Omit<Model, 'id'>>) {
+      this.id = id;
+      this.name = data.name;
+      this.color = data.color;
+      this.owner = data.owner;
+    }
+
+    @IsString()
+    @IsNotEmpty()
+    id: Model['id'];
+
+    @IsString()
+    @IsNotEmpty()
+    name?: Model['name'];
+
+    @IsHexColor()
+    @IsNotEmpty()
+    color?: Model['color'];
+
+    @IsString()
+    @IsNotEmpty()
+    owner?: Model['owner'];
   }
 
   export interface Repository {
@@ -39,8 +64,10 @@ namespace OperationTypeTypes {
       data: OperationTypeTypes.Create
     ): Promise<OperationTypeTypes.Model | undefined>;
     readAll(): Promise<OperationTypeTypes.Model[]>;
-    readOne(): Promise<OperationTypeTypes.Model>;
-    update(): Promise<OperationTypeTypes.Model>;
+    readOne(): Promise<OperationTypeTypes.Model | undefined>;
+    update(
+      data: OperationTypeTypes.Update
+    ): Promise<OperationTypeTypes.Model | undefined>;
     delete(path: string): Promise<boolean>;
   }
 
@@ -48,6 +75,7 @@ namespace OperationTypeTypes {
     loading: boolean;
     operationTypes: OperationTypeTypes.Model[];
     createItem(name: string, color: string): Promise<void>;
+    updateItem(id: string, name: string, color: string): Promise<void>;
     loadAll(): Promise<void>;
     deleteItem(id: string): Promise<void>;
   }

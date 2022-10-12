@@ -57,6 +57,28 @@ const useOperationTypeStore = create<OperationTypeTypes.Store>()((set) => ({
 
     set({ loading: false });
   },
+
+  async updateItem(id: string, name: string, color: string): Promise<void> {
+    set({ loading: true });
+
+    const owner = firebaseAuth.currentUser?.uid;
+
+    if (!owner) return void toast.error('Falha ao carregar usuário!');
+
+    const repository = new OperationTypeRepository();
+
+    const result = await repository.update({ id, name, color, owner });
+
+    if (result) {
+      toast.success('Tipo de operação atualizada com sucesso!');
+
+      const operationTypes = await repository.readAll();
+
+      set({ operationTypes });
+    }
+
+    set({ loading: false });
+  },
 }));
 
 export default useOperationTypeStore;
