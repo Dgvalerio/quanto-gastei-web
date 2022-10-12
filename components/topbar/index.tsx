@@ -54,13 +54,16 @@ const TopBar: FC = () => {
   }, [themeMode]);
 
   return (
-    <Container container justifyContent="space-between" alignItems="center">
-      <Grid item xs={3} className="logo">
+    <Container container alignItems="center">
+      <Grid item className="logo">
         <Typography variant="h4" component={Link} href={routes.home()}>
           Quanto gastei?
         </Typography>
       </Grid>
-      <Grid item>
+      <Grid item className="link">
+        <Link href={routes.operationTypes()}>Operation Types</Link>
+      </Grid>
+      <Grid item ml="auto">
         <Tooltip title={`Trocar para ${nextThemeMode} mode`} arrow>
           <IconButton
             size="large"

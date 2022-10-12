@@ -20,6 +20,12 @@ const Container = styled(Grid)`
       text-decoration: none;
     }
   }
+
+  > .link > a {
+    color: ${({ theme }): string => alpha(theme.palette.text.secondary, 0.4)};
+    text-transform: none;
+    text-decoration: none;
+  }
 `;
 
 const TopBarStyles = { Container };

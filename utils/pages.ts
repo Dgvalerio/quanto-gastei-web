@@ -1,9 +1,9 @@
 export enum Routes {
   Home = `/`,
-  Dashboard = `/dashboard`,
+  OperationTypes = `/operation-types`,
 }
 
 export const routes = {
   home: (): Routes => Routes.Home,
-  dashboard: (): Routes => Routes.Dashboard,
+  operationTypes: (): Routes => Routes.OperationTypes,
 };
