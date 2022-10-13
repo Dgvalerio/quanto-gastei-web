@@ -18,7 +18,7 @@ const useOperationStore = create<Store>()((set) => ({
 
     const repository = new OperationRepository();
 
-    const operations = await repository.readAll();
+    const operations = await repository.readAllWithRelationships();
 
     set({ operations, loading: false });
   },
@@ -31,7 +31,7 @@ const useOperationStore = create<Store>()((set) => ({
     const result = await repository.delete(id);
 
     if (result) {
-      const operations = await repository.readAll();
+      const operations = await repository.readAllWithRelationships();
 
       set({ operations });
     }
@@ -64,7 +64,7 @@ const useOperationStore = create<Store>()((set) => ({
     if (result) {
       toast.success('Operação criada com sucesso!');
 
-      const operations = await repository.readAll();
+      const operations = await repository.readAllWithRelationships();
 
       set({ operations });
     }
@@ -99,7 +99,7 @@ const useOperationStore = create<Store>()((set) => ({
     if (result) {
       toast.success('Operação atualizada com sucesso!');
 
-      const operations = await repository.readAll();
+      const operations = await repository.readAllWithRelationships();
 
       set({ operations });
     }

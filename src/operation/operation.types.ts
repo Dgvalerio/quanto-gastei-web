@@ -4,7 +4,7 @@ import OperationTypeTypes from '@/src/operation-type/operation-type.types';
 import { CollectionReference, DocumentReference } from '@firebase/firestore';
 
 import {
-  IsDate,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -14,7 +14,7 @@ import {
 namespace OperationTypes {
   export interface Model {
     id: string;
-    date: Date;
+    date: string;
     description: string;
     value: number;
     owner: string;
@@ -40,7 +40,7 @@ namespace OperationTypes {
       this.operationTypeId = operationTypeId;
     }
 
-    @IsDate()
+    @IsDateString()
     @IsNotEmpty()
     date: Model['date'];
 
@@ -75,7 +75,7 @@ namespace OperationTypes {
     @IsNotEmpty()
     id: Model['id'];
 
-    @IsDate()
+    @IsDateString()
     @IsNotEmpty()
     @IsOptional()
     date?: Model['date'];
@@ -113,7 +113,7 @@ namespace OperationTypes {
 
   export interface Store {
     loading: boolean;
-    operations: Model[];
+    operations: ModelWithRelationships[];
     createItem(
       date: Model['date'],
       description: Model['description'],
@@ -132,15 +132,15 @@ namespace OperationTypes {
   }
 
   export interface CreateForm extends HTMLFormElement {
-    dateInput: Model['date'];
-    descriptionInput: Model['description'];
-    valueInput: Model['value'];
-    operationTypeIdInput: Model['operationTypeId'];
+    dateInput: HTMLInputElement;
+    descriptionInput: HTMLInputElement;
+    valueInput: HTMLInputElement;
+    operationTypeIdInput: HTMLInputElement;
   }
 
   export type CreateFormComponent = FC;
   export type ReadAllComponent = FC;
-  export type ItemComponent = FC<Model>;
+  export type ItemComponent = FC<ModelWithRelationships>;
 }
 
 export default OperationTypes;

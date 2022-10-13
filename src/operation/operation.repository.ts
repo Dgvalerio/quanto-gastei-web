@@ -1,6 +1,8 @@
 import { toast } from 'react-toastify';
 
 import { firestore } from '@/config/firebase';
+import OperationTypeRepository from '@/src/operation-type/operation-type.repository';
+import OperationTypeTypes from '@/src/operation-type/operation-type.types';
 import OperationTypes from '@/src/operation/operation.types';
 import {
   addDoc,
@@ -15,9 +17,15 @@ import {
 
 import { validate } from 'class-validator';
 
+import Repository = OperationTypes.Repository;
+import Model = OperationTypes.Model;
+import ModelWithRelationships = OperationTypes.ModelWithRelationships;
+import Create = OperationTypes.Create;
+import Update = OperationTypes.Update;
+
 export const OPERATION_PATH = 'Operation';
 
-class OperationRepository implements OperationTypes.Repository {
+class OperationRepository implements Repository {
   getCollection(): CollectionReference {
     return collection(firestore, OPERATION_PATH);
   }
@@ -26,11 +34,9 @@ class OperationRepository implements OperationTypes.Repository {
     return doc(firestore, OPERATION_PATH, path);
   }
 
-  async create(
-    data: OperationTypes.Create
-  ): Promise<OperationTypes.Model | undefined> {
+  async create(data: Create): Promise<Model | undefined> {
     try {
-      const validationDTO = new OperationTypes.Create(
+      const validationDTO = new Create(
         data.date,
         data.description,
         data.value,
@@ -60,13 +66,13 @@ class OperationRepository implements OperationTypes.Repository {
     }
   }
 
-  async readAll(): Promise<OperationTypes.Model[]> {
+  async readAll(): Promise<Model[]> {
     try {
       const querySnapshot = await getDocs(this.getCollection());
 
       return querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<OperationTypes.Model, 'id'>),
+        ...(doc.data() as Omit<Model, 'id'>),
       }));
     } catch (e) {
       toast.error(`Falha ao listar todos os tipos de operação ${e}`);
@@ -75,16 +81,42 @@ class OperationRepository implements OperationTypes.Repository {
     }
   }
 
-  async readOne(): Promise<OperationTypes.Model | undefined> {
-    return Promise.resolve({} as OperationTypes.Model);
+  async readAllWithRelationships(): Promise<ModelWithRelationships[]> {
+    try {
+      const querySnapshot = await getDocs(this.getCollection());
+
+      const operations = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Model, 'id'>),
+      }));
+
+      const operationTypeRepository = new OperationTypeRepository();
+
+      const operationTypes = await operationTypeRepository.readAll();
+
+      return operations.map(
+        (operation): ModelWithRelationships => ({
+          ...operation,
+          operationType:
+            operationTypes.find(
+              (type) => type.id === operation.operationTypeId
+            ) || ({} as OperationTypeTypes.Model),
+        })
+      );
+    } catch (e) {
+      toast.error(`Falha ao listar todos os tipos de operação ${e}`);
+
+      return [];
+    }
   }
 
-  async update({
-    id,
-    ...data
-  }: OperationTypes.Update): Promise<OperationTypes.Model | undefined> {
+  async readOne(): Promise<Model | undefined> {
+    return Promise.resolve({} as Model);
+  }
+
+  async update({ id, ...data }: Update): Promise<Model | undefined> {
     try {
-      const validationDTO = new OperationTypes.Update(id, data);
+      const validationDTO = new Update(id, data);
 
       const errors = await validate(validationDTO);
 
